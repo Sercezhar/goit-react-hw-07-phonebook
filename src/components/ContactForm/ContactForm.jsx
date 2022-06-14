@@ -1,18 +1,22 @@
 import { useState } from 'react';
-import { useContacts } from 'hooks/useContacts';
-import { nanoid } from 'nanoid';
+import {
+  useGetContactsQuery,
+  useAddContactMutation,
+} from 'redux/contactsSlice';
 import { toast } from 'react-toastify';
+import { DotsLoader } from 'components/Loaders/DotsLoader/';
 import styles from './ContactForm.module.css';
 
 export function ContactForm() {
-  const { contacts, addContact } = useContacts();
+  const { data: contacts } = useGetContactsQuery();
+  const [addContact, { isLoading }] = useAddContactMutation();
 
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   function resetState() {
     setName('');
-    setNumber('');
+    setPhone('');
   }
 
   function handleInputChange(event) {
@@ -22,28 +26,31 @@ export function ContactForm() {
       setName(value);
     }
 
-    if (name === 'number') {
-      setNumber(value);
+    if (name === 'phone') {
+      setPhone(value);
     }
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     const newContact = {
-      id: nanoid(),
       name,
-      number,
+      phone,
     };
 
     const alreadyInContacts = contacts.some(
       contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
     );
 
-    if (alreadyInContacts) {
-      toast.error(`${newContact.name.toUpperCase()} is already in contacts.`);
-    } else {
-      addContact(newContact);
-      toast.success(`${newContact.name.toUpperCase()} is added to contacts.`);
+    try {
+      if (alreadyInContacts) {
+        toast.error(`${newContact.name.toUpperCase()} is already in contacts.`);
+      } else {
+        await addContact(newContact);
+        toast.success(`${newContact.name.toUpperCase()} is added to contacts.`);
+      }
+    } catch (error) {
+      console.log(error);
     }
 
     resetState();
@@ -70,9 +77,9 @@ export function ContactForm() {
         <input
           className={styles.Input}
           type="tel"
-          name="number"
+          name="phone"
           placeholder="number"
-          value={number}
+          value={phone}
           autoComplete="off"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
@@ -80,8 +87,9 @@ export function ContactForm() {
           onChange={handleInputChange}
         />
       </label>
+
       <button type="submit" className={styles.SubmitBtn}>
-        Add contact
+        {isLoading ? <DotsLoader /> : 'Add contact'}
       </button>
     </form>
   );

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 400px;
+  width: 500px;
   border-radius: 5px;
 }
 
@@ -17,7 +17,7 @@
 .Input {
   margin-top: 3px;
   padding: 8px 0px;
-  width: 250px;
+  width: 300px;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1.4px;
@@ -35,8 +35,12 @@
 }
 
 .SubmitBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px 30px;
-  width: fit-content;
+  width: 200px;
+  height: 40px;
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 1.4px;

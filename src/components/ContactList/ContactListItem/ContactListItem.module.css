@@ -12,11 +12,12 @@
 }
 
 .Item:not(:last-child) {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .Contact {
   margin-right: 10px;
+  margin-bottom: 4px;
 }
 
 .Contact svg {

@@ -4,12 +4,13 @@ import { ContactForm } from './ContactForm';
 import { ContactList } from './ContactList';
 import { Notification } from './Notification';
 import { Filter } from './Filter';
-import { useContacts } from 'hooks/useContacts';
+import { useGetContactsQuery } from 'redux/contactsSlice';
+import { CircleLoader } from './Loaders/CircleLoader';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export function App() {
-  const { contacts } = useContacts();
+  const { data: contacts, isLoading } = useGetContactsQuery();
 
   return (
     <Container>
@@ -23,12 +24,18 @@ export function App() {
       </Section>
 
       <Section tag={'h2'} title={'Contacts'}>
-        {contacts.length === 0 ? (
-          <Notification message={'*No contacts added*'} />
+        {isLoading ? (
+          <CircleLoader className={'ListLoader'} />
         ) : (
           <>
-            <Filter />
-            <ContactList />
+            {contacts.length === 0 ? (
+              <Notification message={'No contacts added'} />
+            ) : (
+              <>
+                <Filter />
+                <ContactList />
+              </>
+            )}
           </>
         )}
       </Section>
