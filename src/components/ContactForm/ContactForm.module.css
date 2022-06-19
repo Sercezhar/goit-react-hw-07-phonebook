@@ -63,6 +63,12 @@
   background-color: #d9a814;
 }
 
+@media screen and (max-width: 480px) {
+  .Input {
+    width: 250px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .Form {
     width: fit-content;
